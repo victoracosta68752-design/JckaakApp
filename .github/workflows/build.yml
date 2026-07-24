@@ -1,0 +1,20 @@
+name: Build Tweak
+on: [push]
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Theos
+        run: |
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          echo "THEOS=~/theos" >> $GITHUB_ENV
+      - name: Build
+        run: |
+          export THEOS=~/theos
+          make package
+      - name: Upload DEB
+        uses: actions/upload-artifact@v3
+        with:
+          name: JckaakApp-deb
+          path: packages/*.deb
